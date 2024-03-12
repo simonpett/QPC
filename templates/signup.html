@@ -1,0 +1,43 @@
+<form method="POST" action="{{ url_for('signup') }}">
+    
+    <label for="first_name">First Name:</label>
+    <input type="text" id="first_name" name="first_name" required>
+    
+    <label for="last_name">Last Name:</label>
+    <input type="text" id="last_name" name="last_name" required>
+    
+    <label for="occupation">Occupation:</label>
+    <input type="text" id="occupation" name="occupation" required>
+    
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" required>
+    
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password" required>
+    
+    <label for="verify_password">Verify Password:</label>
+    <input type="password" id="verify_password" name="verify_password" required>
+    
+    <label for="is_real_estate">Are you in real estate?</label>
+    <input type="checkbox" id="is_real_estate" name="is_real_estate">
+    
+    <div id="business_input" style="display: none;">
+        <label for="business">Business:</label>
+        <input type="text" id="business" name="business">
+    </div>
+    
+    <button type="submit">Sign Up</button>
+</form>
+
+<script>
+    const isRealEstateCheckbox = document.getElementById('is_real_estate');
+    const businessInput = document.getElementById('business_input');
+
+    isRealEstateCheckbox.addEventListener('change', function() {
+        if (this.checked) {
+            businessInput.style.display = 'block';
+        } else {
+            businessInput.style.display = 'none';
+        }
+    });
+</script>
