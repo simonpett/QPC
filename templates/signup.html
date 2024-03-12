@@ -1,33 +1,32 @@
 <form method="POST" action="{{ url_for('signup') }}">
     
-    <label for="first_name">First Name:</label>
-    <input type="text" id="first_name" name="first_name" required>
-    
-    <label for="last_name">Last Name:</label>
-    <input type="text" id="last_name" name="last_name" required>
-    
-    <label for="occupation">Occupation:</label>
-    <input type="text" id="occupation" name="occupation" required>
-    
-    <label for="email">Email:</label>
-    <input type="email" id="email" name="email" required>
-    
-    <label for="password">Password:</label>
-    <input type="password" id="password" name="password" required>
-    
-    <label for="verify_password">Verify Password:</label>
-    <input type="password" id="verify_password" name="verify_password" required>
-    
-    <label for="is_real_estate">Are you in real estate?</label>
-    <input type="checkbox" id="is_real_estate" name="is_real_estate">
-    
-    <div id="business_input" style="display: none;">
-        <label for="businessname">Business:</label>
-        <input type="text" id="businessname" name="businessname">
-    </div>
+    <div>{{ form.first_name.label }}: {{ form.first_name }}</div>
+    {% if form.first_name.errors %}
+        <ul class="errors">{% for error in form.first_name.errors %}<li>{{ error }}</li>{% endfor %}</ul>
+    {% endif %}
+
+
+    <div>{{ form.last_name.label }}: {{ form.last_name }}</div>
+    <div>{{ form.occupation.label }}: {{ form.occupation }}</div>
+    <div>{{ form.email.label }}: {{ form.email }}</div>
+    <div>{{ form.password.label }}: {{ form.password }}</div>
+    <div>{{ form.verify_password.label }}: {{ form.verify_password }}</div>
+    <div>{{ form.is_in_realestate.label }}: {{ form.is_in_realestate }}</div>
+    <div>{{ form.businessname.label }}: {{ form.businessname }}</div>
+
     
     <button type="submit">Sign Up</button>
+    {% if form.errors %}
+    <ul class="errors">
+        {% for field_name, field_errors in form.errors|dictsort if field_errors %}
+            {% for error in field_errors %}
+                <li>{{ form[field_name].label }}: {{ error }}</li>
+            {% endfor %}
+        {% endfor %}
+    </ul>
+    {% endif %}
 </form>
+
 
 <script>
     const isRealEstateCheckbox = document.getElementById('is_real_estate');

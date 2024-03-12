@@ -1,9 +1,10 @@
 from flask import Flask, render_template, request, redirect, url_for
 import sqlite3
+from userform import UserForm
 
 app = Flask(__name__)
 
-  
+
 
 if __name__ == '__main__':
     app.run()
@@ -22,7 +23,8 @@ def browse():
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
-    if request.method == 'POST':
+    form = UserForm()
+    if request.method == 'POST' and form.validate():
          # Handle the form submission
         first_name = request.form['first_name']
         last_name = request.form['last_name']
@@ -38,9 +40,10 @@ def signup():
         conn.commit()
         conn.close()
         return redirect(url_for('browse')) # Redirect to login page after successful signup
+    
     else:
         # Render the signup page
-        return render_template('signup.html')
+        return render_template('signup.html', form=form)
 
 
 def get_db_connection():
