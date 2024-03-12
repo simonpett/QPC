@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, url_for
 import sqlite3
 
 app = Flask(__name__)
@@ -24,11 +24,20 @@ def browse():
 def signup():
     if request.method == 'POST':
          # Handle the form submission
-        username = request.form['username']
+        first_name = request.form['first_name']
+        last_name = request.form['last_name']
+        occupation = request.form['occupation']
+        email = request.form['email']
         password = request.form['password']
+        businessname = request.form['businessname']
         # Perform signup logic here
-        # ...
-        return redirect('/login')  # Redirect to login page after successful signup
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute('INSERT INTO users (first_name, last_name, occupation, email, password, businessname) VALUES (?, ?, ?, ?, ?, ?)',
+                       (first_name, last_name, occupation, email, password, businessname))
+        conn.commit()
+        conn.close()
+        return redirect(url_for('browse')) # Redirect to login page after successful signup
     else:
         # Render the signup page
         return render_template('signup.html')
