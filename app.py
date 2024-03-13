@@ -23,7 +23,11 @@ def browse():
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
-    form = UserForm()
+    form = None
+    if request.method == 'POST':
+        form = UserForm(request.form)
+    else:
+        form = UserForm()
     if request.method == 'POST' and form.validate():
          # Handle the form submission
         first_name = request.form['first_name']
