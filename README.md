@@ -99,3 +99,32 @@ options to extend
 - or even better if there are more user types, seperate user and role and use authentication for sign on of a user
      and authorization system for role of the user (admin, realestate user, public user)
 - implement forgot pwd/reset pwd fucntionality using flask-login extensions, also rememberme functionality 
+
+
+
+setup instructions
+- download vscode
+- follow get started prompt
+    - python extension
+    - download python from microsfot store or python site for mac
+    - connect to github
+- install copilot extension
+- got to source control tab
+    - follow instructions to install git on windows/mac
+    - open command promopt, set defults
+        - git config --global user.email "caitlin.pett@gmail.com"
+        - git config --global user.name "Caitlin Pett"
+    - clone repo - QPC
+
+- setup python env to run app
+    - go to requirements.txt in VsCode and create env -or use teh command
+    - open app.py - select debug and run, python
+    - go to 127.0.0.1:5000 or right click link
+
+intall extra extensions
+- python indent
+- jinja for jinja syntax hightlight
+- intellicode
+- sqlite - simplest db view - many other choices
+- csv rainbow - for csv colour highlighting
+- live share - for in vscode live sharing
