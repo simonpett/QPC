@@ -39,12 +39,28 @@
               <li class="nav-item">
                 <a class="nav-link" href="admin.html">Admin</a> 
               </li>
+              <li class="nav-item">
+                {% if current_user.is_authenticated %}
+                  <a class="nav-link" href="{{ url_for('logout') }}">Log Out</a> 
+                {% endif %}
+              </li>
             </ul>
         </nav>
       </section>
 
       <main>
         <div class="container has-text-centered">
+          {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+              <div {% if category=='info'%} class="alert alert-info" {% else %} class="alert alert-warning" {% endif %}>
+                <ul>
+                  {% for message in messages %}
+                    <li>{{ message }}</li>
+                  {% endfor %}
+                </ul>
+              </div>
+            {% endif %}
+          {% endwith %}
           {% block content %}
           {% endblock %}
         </div>
