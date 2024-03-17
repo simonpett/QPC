@@ -4,6 +4,7 @@ from userform import UserForm
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import LoginManager, login_user, current_user, login_required, logout_user
 from userlogin import User
+from flask import flash
 
 app = Flask(__name__)
 app.secret_key = 'aodhfbdfhvbw8357y8735bjehlf'
@@ -53,7 +54,8 @@ def login():
             login_user(user)
             return redirect(url_for('browse'))
         else:
-            return render_template('login.html', error='Invalid email or password')
+            flash('Invalid email or password', 'error')
+            return redirect(url_for('login'))
 
     return render_template('login.html')
 
