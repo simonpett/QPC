@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for
 import sqlite3
 from userform import UserForm
+from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
 
@@ -35,12 +36,13 @@ def signup():
         occupation = request.form['occupation']
         email = request.form['email']
         password = request.form['password']
+        passwordhash = generate_password_hash(password)
         businessname = request.form['businessname']
         # Perform signup logic here
         conn = get_db_connection()
         cursor = conn.cursor()
         cursor.execute('INSERT INTO users (first_name, last_name, occupation, email, password, businessname) VALUES (?, ?, ?, ?, ?, ?)',
-                       (first_name, last_name, occupation, email, password, businessname))
+                       (first_name, last_name, occupation, email, passwordhash, businessname))
         conn.commit()
         conn.close()
         return redirect(url_for('browse')) # Redirect to login page after successful signup
