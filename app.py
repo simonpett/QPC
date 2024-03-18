@@ -5,6 +5,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import LoginManager, login_user, current_user, login_required, logout_user
 from userlogin import User
 from flask import flash
+from geopy.distance import geodesic
 
 app = Flask(__name__)
 app.secret_key = 'aodhfbdfhvbw8357y8735bjehlf'
@@ -52,7 +53,7 @@ def login():
         if user_data and check_password_hash(user_data['password'], password):
             user = User(user_data['id'], user_data['first_name'], user_data['last_name'], user_data['email'], user_data['password'])
             login_user(user)
-            return redirect(url_for('browse'))
+            return redirect(url_for('search'))
         else:
             flash('Invalid email or password', 'error')
             return redirect(url_for('login'))
@@ -103,6 +104,55 @@ def signup():
     else:
         # Render the signup page
         return render_template('signup.html', form=form)
+
+@app.route('/search', methods=['GET', 'POST'])
+@login_required
+def search():
+    suburbs = get_unique_suburbs()
+    if request.method == 'POST':
+        suburb = request.form['suburb']
+        properties = get_properties_in_suburb(suburb)
+        property_to_schools = {}
+        target_distance = int(request.form['school_distance'])
+        all_schools = get_all_schools()
+        for property in properties:
+            property_lat = property['lat']
+            property_long = property['long']
+            schools_within_distance = []
+            for school in all_schools:
+                school_lat = school['latitude']
+                school_long = school['longitude']
+                distance = geodesic((property_lat, property_long), (school_lat, school_long)).kilometers
+                if distance < target_distance:
+                    schools_within_distance.append(school)
+            property_to_schools[property['id']] = schools_within_distance
+
+        return render_template('search.html', properties=properties, suburbs=suburbs, property_to_schools=property_to_schools, selected_suburb=suburb, selected_distance=target_distance)
+    return render_template('search.html', suburbs=suburbs)
+
+def get_all_schools():
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute('SELECT * FROM schools')
+    all_schools = cursor.fetchall()
+    conn.close()
+    return all_schools
+
+def get_unique_suburbs():
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute('SELECT DISTINCT suburb FROM properties')
+    suburbs = cursor.fetchall()
+    conn.close()
+    return suburbs
+
+def get_properties_in_suburb(suburb):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute('SELECT * FROM properties WHERE suburb = ?', (suburb,))
+    properties = cursor.fetchall()
+    conn.close()
+    return properties
 
 
 def get_db_connection():

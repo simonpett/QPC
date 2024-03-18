@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <form method="POST">
+        <label for="suburb">Suburb:</label>
+        <select name="suburb" id="suburb">
+            {% for suburb in suburbs %}
+                <option value="{{ suburb[0] }}">{{ suburb[0] }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="school_distance">Distance to Schools:</label>
+        <select name="school_distance" id="school_distance">
+            <option value="1">1 km</option>
+            <option value="2">2 km</option>
+            <option value="3">3 km</option>
+        </select>
+
+        <label for="bus_stop_distance">Distance to Bus Stops:</label>
+        <select name="bus_stop_distance" id="bus_stop_distance">
+            <option value="0.1">100 meters</option>
+            <option value="0.5">500 meters</option>
+            <option value="1"> 1 km</option>
+        </select>
+
+        <button type="submit">Search</button>
+    </form>
+
+    <div class="row">
+        {% for property in properties %}
+            {% set imagepath = 'images/' ~ property.image %}
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    <img src="{{ url_for('static', filename=imagepath) }}" class="card-img-top" alt="Property Image">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ property.suburb }}</h5>
+                        <p class="card-text">{{ property.address1 }}</p>
+                        <p class="card-text">{{ property.description }}</p>
+                        <p class="card-text">
+                            <i class="fa-solid fa-bed"></i> {{ property.bedrooms }}
+                            <i class="fa-solid fa-bath"></i> {{ property.bathrooms }}
+                            <i class="fa-solid fa-toilet"></i> {{ property.toilets }}
+                            <i class="fa-solid fa-car"></i> {{ property.carspace }} 
+                            <i class="fa-regular fa-square"></i> {{ property.landarea }} m&sup2;
+                        </p>
+                        <div>
+                            {% set schools_for_property = property_to_schools[property.id]%}
+                            {% for school in schools_for_property %}
+                                <p>
+                                    <i class"fa-solid fa-school"> </i> 
+                                    {{ school.name }}
+                                </p>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+{% endblock %}

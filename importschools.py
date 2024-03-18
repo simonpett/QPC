@@ -22,8 +22,8 @@ with open('data/schoolinfo.csv', 'r') as file:
         id = row[0]
         name = row[2]
         suburb = row[18]
-        latitude = row[37]
-        longitude = row[38]
+        latitude = row[38]
+        longitude = row[37]
 
         # Insert the data into the database
         cursor.execute('INSERT INTO schools (id, name, suburb, latitude, longitude) VALUES (?, ?, ?, ?, ?)', (id, name, suburb, latitude, longitude))
