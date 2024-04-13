@@ -113,22 +113,42 @@ def search():
         suburb = request.form['suburb']
         properties = get_properties_in_suburb(suburb)
         property_to_schools = {}
-        target_distance = int(request.form['school_distance'])
-        all_schools = get_all_schools()
+        property_to_bus_stops = {}
+        target_distance_school = int(request.form['school_distance'])
+        target_distance_bus_stops = float(request.form['bus_stop_distance'])
+        
         for property in properties:
             property_lat = property['lat']
             property_long = property['long']
-            schools_within_distance = []
-            for school in all_schools:
-                school_lat = school['latitude']
-                school_long = school['longitude']
-                distance = geodesic((property_lat, property_long), (school_lat, school_long)).kilometers
-                if distance < target_distance:
-                    schools_within_distance.append(school)
+            schools_within_distance = get_schools_within_distance(target_distance_school, property_lat, property_long)
             property_to_schools[property['id']] = schools_within_distance
+            bus_stops_within_distance = get_bus_stops_within_distance(target_distance_bus_stops, property_lat, property_long)
+            property_to_bus_stops[property['id']] = bus_stops_within_distance
 
-        return render_template('search.html', properties=properties, suburbs=suburbs, property_to_schools=property_to_schools, selected_suburb=suburb, selected_distance=target_distance)
+        return render_template('search.html', properties=properties, suburbs=suburbs, property_to_schools=property_to_schools, property_to_bus_stops=property_to_bus_stops, selected_suburb=suburb, selected_distance_school=target_distance_school, selected_distance_bus=target_distance_bus_stops)
     return render_template('search.html', suburbs=suburbs)
+
+def get_schools_within_distance(target_distance_school, property_lat, property_long):
+    all_schools = get_all_schools()
+    schools_within_distance = []
+    for school in all_schools:
+        school_lat = school['latitude']
+        school_long = school['longitude']
+        distance = geodesic((property_lat, property_long), (school_lat, school_long)).kilometers
+        if distance < target_distance_school:
+            schools_within_distance.append(school)
+    return schools_within_distance
+
+def get_bus_stops_within_distance(target_distance_bus_stops, property_lat, property_long):
+    all_bus_stops = get_all_bus_stops()
+    bus_stops_within_distance = []
+    for bus_stop in all_bus_stops:
+        bus_stop_lat = bus_stop['latitude']
+        bus_stop_long = bus_stop['longitude']
+        distance = geodesic((property_lat, property_long), (bus_stop_lat, bus_stop_long)).kilometers
+        if distance < target_distance_bus_stops:
+            bus_stops_within_distance.append(bus_stop)
+    return bus_stops_within_distance
 
 def get_all_schools():
     conn = get_db_connection()
@@ -154,6 +174,13 @@ def get_properties_in_suburb(suburb):
     conn.close()
     return properties
 
+def get_all_bus_stops():
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute('SELECT * FROM bus_stops')
+    all_bus_stops = cursor.fetchall()
+    conn.close()
+    return all_bus_stops
 
 def get_db_connection():
     conn = sqlite3.connect('QPC.db')
