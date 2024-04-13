@@ -3,6 +3,7 @@ import sqlite3
 # Connect to the database
 conn = sqlite3.connect('QPC.db')
 c = conn.cursor()
+c.execute('drop table if exists users')
 
 # Create the user table
 c.execute('''

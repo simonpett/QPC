@@ -1,19 +1,19 @@
 from flask import Flask, render_template, request, redirect, url_for
 import sqlite3
+import csv
 from userform import UserForm
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import LoginManager, login_user, current_user, login_required, logout_user
 from userlogin import User
 from flask import flash
 from geopy.distance import geodesic
-import csv
+from markupsafe import Markup
 
 app = Flask(__name__)
 app.secret_key = 'aodhfbdfhvbw8357y8735bjehlf'
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
-
 
 if __name__ == '__main__':
     app.run()
@@ -22,8 +22,6 @@ if __name__ == '__main__':
 def index():                                                                    
     return render_template('index.html')  
                                                               
-
-
 @login_manager.user_loader
 def load_user(user_id):
     conn = get_db_connection()
@@ -44,15 +42,8 @@ def login():
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
-
-        conn = get_db_connection()
-        cursor = conn.cursor()
-        cursor.execute('SELECT * FROM users WHERE email = ?', (email,))
-        user_data = cursor.fetchone()
-        conn.close()
-
-        if user_data and check_password_hash(user_data['password'], password):
-            user = User(user_data['id'], user_data['first_name'], user_data['last_name'], user_data['email'], user_data['password'])
+        user = get_user_by_email(email) 
+        if user and user.check_password(password):
             login_user(user)
             return redirect(url_for('search'))
         else:
@@ -61,42 +52,77 @@ def login():
 
     return render_template('login.html')
 
-
 @app.route('/logout')
 @login_required
 def logout():
     logout_user()
     return redirect(url_for('login'))
 
+@app.route('/signup', methods=['GET', 'POST'])
+def signup():
+    form = None
+    if request.method == 'POST':
+        form = UserForm(request.form)
+    else:
+        form = UserForm()
+    # algorithm to validate the user data and check if the users already exists
+    if request.method == 'POST' and form.validate():
+        user = get_user_by_email(form.email.data) # check if user already exists
+        if user != None:
+            flash(Markup('User already exists, please use a different email, or try forgotten password <a href="'+url_for('forgotPassword')+'" class="alert-link">here</a>'), 'error')
+            return render_template('signUp.html', form=form)
+        # validate - so now handle the new signup form submission
+        first_name = request.form['first_name']
+        last_name = request.form['last_name']
+        occupation = request.form['occupation']
+        email = request.form['email']
+        password = request.form['password']
+        passwordhash = generate_password_hash(password)
+        businessname = request.form['businessname']
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute('INSERT INTO users (first_name, last_name, occupation, email, password, businessname) VALUES (?, ?, ?, ?, ?, ?)',
+                       (first_name, last_name, occupation, email, passwordhash, businessname))
+        conn.commit()
+        conn.close()
+        flash('Thanks for signing up! Please login to continue', 'info')
+        return redirect(url_for('login')) 
+    else:
+        return render_template('signup.html', form=form)
+
 @app.route('/admin')
 @login_required
 def admin():
-    # Add your admin logic here
     return render_template('admin.html')
 
 @app.route('/upload_schools', methods=['POST'])
 @login_required
 def upload_schools():
     if request.method == 'POST':
-        if 'schools_csv_file' not in request.files:
+        # algorithm to for checking the csv data before loading it into the database
+        if 'schools_csv_file' not in request.files: # check the file is provided
             flash('No file provided', 'error')
             return render_template('admin.html')
-    
-        schools_csv_file = request.files['schools_csv_file']
+        schools_csv_file = request.files['schools_csv_file'] 
         if schools_csv_file.filename == '':        
             flash('No filename provided', 'error')
             return render_template('admin.html')
         
-        # Get the uploaded file
+        # open the file and read the data
         filename = request.files['schools_csv_file']
-        
-        # Check if the file is CSV
         schools_data = csv.DictReader(filename.stream.read().decode('utf-8-sig').splitlines())
         
+        # Check if the file is has the required header fields 
+        header = schools_data.fieldnames
+        if header[0] != "_id" or header[2] != 'Centre Name' or header[18] != 'Actual Address Line 3' or header[38] != 'Latitude' or header[37] != 'Longitude': 
+            flash("The file headers do not contain the required school fields", 'error') 
+            return render_template('admin.html')
+
+        # Iterate over the rows and insert schools into the database
         conn = get_db_connection()
         cursor = conn.cursor()
         cursor.execute('DELETE FROM schools')
-        # Iterate over the rows and insert schools into the database
+        schools = 0
         for row in schools_data:
             id = row['_id']
             name = row['Centre Name']
@@ -107,9 +133,10 @@ def upload_schools():
             # Insert the school into the database
             cursor.execute('INSERT INTO schools (id, name, suburb, latitude, longitude) VALUES (?, ?, ?, ?, ?)',
                             (id, name, suburb, latitude, longitude))
+            schools += 1
         conn.commit()
         conn.close()       
-        flash('Schools uploaded successfully', 'success')
+        flash(str(schools)+' Schools uploaded successfully', 'info')
         return redirect(url_for('admin'))
     else:
         return redirect(url_for('admin'))
@@ -121,35 +148,6 @@ def browse():
     properties = conn.execute('SELECT * FROM properties').fetchall()                
     conn.close()                       
     return render_template('browse.html', properties=properties)    
-
-@app.route('/signup', methods=['GET', 'POST'])
-def signup():
-    form = None
-    if request.method == 'POST':
-        form = UserForm(request.form)
-    else:
-        form = UserForm()
-    if request.method == 'POST' and form.validate():
-         # Handle the form submission
-        first_name = request.form['first_name']
-        last_name = request.form['last_name']
-        occupation = request.form['occupation']
-        email = request.form['email']
-        password = request.form['password']
-        passwordhash = generate_password_hash(password)
-        businessname = request.form['businessname']
-        # Perform signup logic here
-        conn = get_db_connection()
-        cursor = conn.cursor()
-        cursor.execute('INSERT INTO users (first_name, last_name, occupation, email, password, businessname) VALUES (?, ?, ?, ?, ?, ?)',
-                       (first_name, last_name, occupation, email, passwordhash, businessname))
-        conn.commit()
-        conn.close()
-        return redirect(url_for('login')) # Redirect to login page after successful signup
-    
-    else:
-        # Render the signup page
-        return render_template('signup.html', form=form)
 
 @app.route('/search', methods=['GET', 'POST'])
 @login_required
@@ -173,6 +171,9 @@ def search():
 
         return render_template('search.html', properties=properties, suburbs=suburbs, property_to_schools=property_to_schools, property_to_bus_stops=property_to_bus_stops, selected_suburb=suburb, selected_distance_school=target_distance_school, selected_distance_bus=target_distance_bus_stops)
     return render_template('search.html', suburbs=suburbs)
+
+
+################### Helper functions for the routes ####################
 
 def get_schools_within_distance(target_distance_school, property_lat, property_long):
     all_schools = get_all_schools()
@@ -227,6 +228,14 @@ def get_all_bus_stops():
     all_bus_stops = cursor.fetchall()
     conn.close()
     return all_bus_stops
+
+def get_user_by_email(email):
+    conn = get_db_connection()
+    user = conn.execute('SELECT * FROM users WHERE email = ?', (email,)).fetchone()
+    conn.close()
+    if user == None:
+        return None
+    return User(user['id'], user['first_name'], user['last_name'], user['email'],  user['password'])
 
 def get_db_connection():
     conn = sqlite3.connect('QPC.db')
