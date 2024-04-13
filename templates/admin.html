@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title%}
+    <title>QPC - Welcome</title>
+{% endblock%}
+
+{% block content %}
+<h4>Administrative page to upload bus and school data from the government databases</h4>
+
+<form method="post" action="{{ url_for('upload_schools')}}"enctype="multipart/form-data">
+    <label for="schools_csv_file">Select CSV file:</label>
+    <input type="file" name="schools_csv_file" accept=".csv">
+    <button type="submit">Upload</button>
+</form>
+
+{% endblock %}

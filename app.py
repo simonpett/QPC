@@ -6,6 +6,7 @@ from flask_login import LoginManager, login_user, current_user, login_required, 
 from userlogin import User
 from flask import flash
 from geopy.distance import geodesic
+import csv
 
 app = Flask(__name__)
 app.secret_key = 'aodhfbdfhvbw8357y8735bjehlf'
@@ -67,6 +68,51 @@ def logout():
     logout_user()
     return redirect(url_for('login'))
 
+@app.route('/admin')
+@login_required
+def admin():
+    # Add your admin logic here
+    return render_template('admin.html')
+
+@app.route('/upload_schools', methods=['POST'])
+@login_required
+def upload_schools():
+    if request.method == 'POST':
+        if 'schools_csv_file' not in request.files:
+            flash('No file provided', 'error')
+            return render_template('admin.html')
+    
+        schools_csv_file = request.files['schools_csv_file']
+        if schools_csv_file.filename == '':        
+            flash('No filename provided', 'error')
+            return render_template('admin.html')
+        
+        # Get the uploaded file
+        filename = request.files['schools_csv_file']
+        
+        # Check if the file is CSV
+        schools_data = csv.DictReader(filename.stream.read().decode('utf-8-sig').splitlines())
+        
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute('DELETE FROM schools')
+        # Iterate over the rows and insert schools into the database
+        for row in schools_data:
+            id = row['_id']
+            name = row['Centre Name']
+            suburb = row['Actual Address Line 3']
+            latitude = row['Latitude']
+            longitude = row['Longitude']
+            
+            # Insert the school into the database
+            cursor.execute('INSERT INTO schools (id, name, suburb, latitude, longitude) VALUES (?, ?, ?, ?, ?)',
+                            (id, name, suburb, latitude, longitude))
+        conn.commit()
+        conn.close()       
+        flash('Schools uploaded successfully', 'success')
+        return redirect(url_for('admin'))
+    else:
+        return redirect(url_for('admin'))
 
 @app.route('/browse')     
 @login_required                                                           
