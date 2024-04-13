@@ -1,7 +1,0 @@
-geopy
-flask
-flask-login
-flask-wtf
-wtforms
-email_validator
-markupsafe
