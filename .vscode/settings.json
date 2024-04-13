@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "undefined/subscriptions/cd612a0b-d04a-4acc-a3a4-5802f60d79a8/resourceGroups/appsvc_linux_centralus_basic/providers/Microsoft.Web/sites/QPC-2024",
+    "appService.deploySubpath": "."
+}
