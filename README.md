@@ -36,18 +36,18 @@ Done
 - implement login page, check email, pwd v database version, stores user in session 
 - implement logout, accessed from menu
 - check user is logged in 
+- validate email is unique on signup
+- search page based on suburb, school, busroute
+- create 'please login message' after signup
 
 
 TO DOs
 - Pages
-    - search page based on suburb, school, busroute
     - upload page for cvs - use code form the import scripts
     - create a edit profile page that works of signup userForm
     - data and definition of terms, including copyright ack from list of open source libraris as above, and images from chatgpt
     - simple forgot pwd page, with route that just dummy sends email
 - Updates
-    - validate email is unique on signup
-    - create 'please login message' after signup
     - review pages for useability
         - titles on every page
         - headings on every page
