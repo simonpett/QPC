@@ -1,24 +1,25 @@
 {% extends 'base.html' %}
 
-{% block content %}
+{% block title%}
+    <title>QPC - Welcome</title>
+{% endblock%}
 
-<br>
-<div class="container">
-  <div class="row justify-content-center">
-    <div class="col-md-6">
-      <div class="text-center">
-        <h4>Welcome!</h4>
-        <p>To use our service, <br> log in or sign up below.</p>
-      </div>
-      <div class="text-center">
-        <a href="{{ url_for('login') }}" class="btn btn-primary"><b>Log In</b></a>
-      </div>
-      <div class="text-center mt-3">
-        <a href="{{ url_for('signup') }}" class="btn btn-primary"><b>Sign Up</b></a>
+{% block content %}
+  <br>
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <div class="text-center">
+          <h4>Welcome!</h4>
+          <p>To use our service, <br> log in or sign up below.</p>
+        </div>
+        <div class="text-center">
+          <a href="{{ url_for('login') }}" class="btn btn-primary"><b>Log In</b></a>
+        </div>
+        <div class="text-center mt-3">
+          <a href="{{ url_for('signup') }}" class="btn btn-primary"><b>Sign Up</b></a>
+        </div>
       </div>
     </div>
   </div>
-</div>
-
-
 {% endblock %}

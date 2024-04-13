@@ -1,4 +1,4 @@
-.school_list {
+.hover_list {
     display: none; /* This keeps the list hidden by default */
     /* Add additional styles here to make the list look nicer */
     position: absolute;
@@ -9,6 +9,6 @@
     z-index: 1;
 }
 
-.hover_content_schools:hover .school_list {
+.hover_content:hover .hover_list {
     display: block !important;
 }

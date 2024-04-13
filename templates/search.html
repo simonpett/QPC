@@ -1,29 +1,45 @@
 {% extends 'base.html' %}
 
+{% block title%}
+    <title>QPC - Property Search</title>
+{% endblock%}
+
 {% block content %}
+    <h4>Find homes in a suburb close to schools and bus stops</h4>
+
     <form method="POST">
-        <label for="suburb">Suburb:</label>
-        <select name="suburb" id="suburb">
-            {% for suburb in suburbs %}
-                <option value="{{ suburb[0] }}" {% if selected_suburb == suburb[0] %}selected{% endif %}>{{ suburb[0] }}</option>
-            {% endfor %}
-        </select>
+        <div class="form-group">
+            <label for="suburb">Suburb:</label>
+            <select name="suburb" id="suburb" class="form-control">
+                {% for suburb in suburbs %}
+                    <option value="{{ suburb[0] }}" {% if selected_suburb == suburb[0] %}selected{% endif %}>{{ suburb[0] }}</option>
+                {% endfor %}
+            </select>
+        </div>
 
-        <label for="school_distance">Distance to Schools:</label>
-        <select name="school_distance" id="school_distance">
-            <option value="1" {% if selected_distance_school == 1 %} selected {% endif %}>1 km</option>
-            <option value="2" {% if selected_distance_school == 2 %} selected {% endif %}>2 km</option>
-            <option value="3" {% if selected_distance_school == 3 %} selected {% endif %}>3 km</option>
-        </select>
-
-        <label for="bus_stop_distance">Distance to Bus Stops:</label>
-        <select name="bus_stop_distance" id="bus_stop_distance">
-            <option value="0.1" {% if selected_distance_bus == 0.1 %} selected {% endif %}>100 meters</option>
-            <option value="0.5" {% if selected_distance_bus == 0.5 %} selected {% endif %}>500 meters</option>
-            <option value="1" {% if selected_distance_bus == 1 %} selected {% endif %}> 1 km</option>
-        </select>
-
-        <button type="submit">Search</button>
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="school_distance">Distance to Schools:</label>
+                    <select name="school_distance" id="school_distance" class="form-control">
+                        <option value="1" {% if selected_distance_school == 1 %} selected {% endif %}>1 km</option>
+                        <option value="2" {% if selected_distance_school == 2 %} selected {% endif %}>2 km</option>
+                        <option value="3" {% if selected_distance_school == 3 %} selected {% endif %}>3 km</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="bus_stop_distance">Distance to Bus Stops:</label>
+                    <select name="bus_stop_distance" id="bus_stop_distance" class="form-control"> 
+                        <option value="0.1" {% if selected_distance_bus == 0.1 %} selected {% endif %}>100 meters</option>
+                        <option value="0.5" {% if selected_distance_bus == 0.5 %} selected {% endif %}>500 meters</option>
+                        <option value="1" {% if selected_distance_bus == 1 %} selected {% endif %}> 1 km</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary mt-4 mb-4">Search</button>
     </form>
 
     <div class="row">
@@ -43,28 +59,37 @@
                             <i class="fa-solid fa-car"></i> {{ property.carspace }} 
                             <i class="fa-regular fa-square"></i> {{ property.landarea }} m&sup2;
                         </p>
-                        <div class="hover_content_schools">
-                            <p>Schools:</p>
-                            <div class="school_list" style="display:none">
+                        <div class="hover_content">
+                            <p><i class="fa-solid fa-school"> </i> 
+                                Hover to see the {{ property_to_schools[property.id] | length }} schools within {{ selected_distance_school }} km
+                            </p>
+                            <div class="hover_list" style="display:none">
                                 {% set schools_for_property = property_to_schools[property.id]%}
                                 <ul class="list-unstyled">
                                     {% for school in schools_for_property %}
                                         <li>
-                                            <i class"fa-solid fa-school"> </i> 
+                                            <i class="fa-solid fa-school"> </i> 
                                             {{ school.name }}
                                         </li>
                                     {% endfor %}
                                 </ul>
                             </div>
                         </div>
-                        <div>
-                            {% set bus_stops_for_property = property_to_bus_stops[property.id]%}
-                            {% for bus_stop in bus_stops_for_property %}
-                                <p>
-                                    <i class"fa-solid fa-bus"> </i> 
-                                    Bus Stop {{ bus_stop.bus_stop_number }}, {{ bus_stop.name }}
-                                </p>
-                            {% endfor %}
+                        <div class="hover_content">
+                            <p><i class="fa-solid fa-bus"> </i> 
+                                Hover to see the {{ property_to_bus_stops[property.id] | length }} bus stops within {{ selected_distance_bus }} km
+                            </p>
+                            <div class="hover_list" style="display:none">
+                                {% set bus_stops_for_property = property_to_bus_stops[property.id]%}
+                                <ul class="list-unstyled">
+                                    {% for bus_stop in bus_stops_for_property %}
+                                        <li>
+                                            <i class="fa-solid fa-bus"> </i> 
+                                            Bus Stop {{ bus_stop.bus_stop_number }}, {{ bus_stop.name }}
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
