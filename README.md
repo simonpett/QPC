@@ -41,10 +41,10 @@ Done
 - create 'please login message' after signup
 - upload page for cvs - use code form the import scripts
  - admin user, and make admin page only work if authenticated and admin
+ - create a edit profile page that works of signup userForm
 
 TO DOs
 - Pages
-    - create a edit profile page that works of signup userForm
     - data and definition of terms, including copyright ack from list of open source libraris as above, and images from chatgpt
     - simple forgot pwd page, with route that just dummy sends email
 - Updates

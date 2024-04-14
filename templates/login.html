@@ -19,7 +19,7 @@
                         <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password">
                     </div>
                     <button type="submit" class="btn btn-primary mt-2">Login</button>
-                    <a href="#" class="btn btn-link">Forgot Password?</a>
+                    <a href="{{ url_for('forgotpassword') }}" class="btn btn-link">Forgot Password?</a>
                     <a href="{{ url_for('signup') }}" class="btn btn-link">Sign Up</a>
                 </form>
             </div>

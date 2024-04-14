@@ -35,7 +35,7 @@
                 {% endif %}
 
                 <p>Enter Your Password to Save Changes</p>
-                <p>To change password, use password reset (LINK) </p> 
+                <p>To change password, use password reset <a href="{{ url_for('forgotpassword') }}" class="btn btn-link">Forgot Password?</a></p> 
 
                 <div class="form-group mb-3">{{ form.password.label }}: {{ form.password(class_="form-control") }}</div>
                 {% if form.password.errors %}

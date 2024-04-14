@@ -253,6 +253,19 @@ def profile():
             flash('Invalid input', 'error')
     return render_template('profile.html', form=userform)
 
+@app.route('/datapolicy')
+def datapolicy():
+    return render_template('datapolicy.html')
+
+#this is a mockup of a password reset to complete the site functionality
+@app.route('/forgotpassword', methods=['GET', 'POST'])
+def forgotpassword():
+    if request.method == 'POST':
+        flash('An email has been sent to you with instructions to reset your password', 'info')
+        return redirect(url_for('login'))
+    return render_template('forgotpassword.html')
+
+
 ################### Helper functions for the routes ####################
 
 def get_schools_within_distance(target_distance_school, property_lat, property_long):
