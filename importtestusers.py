@@ -14,7 +14,8 @@ c.execute('''
         occupation TEXT,
         email TEXT,
         password TEXT,
-        businessname TEXT
+        businessname TEXT,
+        is_admin BOOLEAN DEFAULT 0
     )
 ''')
 

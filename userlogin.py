@@ -2,12 +2,16 @@ from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
 class User(UserMixin):
-    def __init__(self, id, firstname, lastname, email, password):
+    def __init__(self, id, firstname, lastname, occupation, email, password, businessname, is_admin):
         self.id = id
-        self.firstname = firstname
-        self.lastname = lastname
+        self.first_name = firstname
+        self.last_name = lastname
+        self.occupation = occupation
         self.email = email
         self.password = password
+        self.businessname = businessname
+        self.is_admin = is_admin
+       
    
     def set_password(self, password):
         self.password = generate_password_hash(password)

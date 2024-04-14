@@ -40,6 +40,7 @@ Done
 - search page based on suburb, school, busroute
 - create 'please login message' after signup
 - upload page for cvs - use code form the import scripts
+ - admin user, and make admin page only work if authenticated and admin
 
 TO DOs
 - Pages
@@ -54,7 +55,6 @@ TO DOs
         - test non-mouse tabbing - works now but test at the end
         - add required fields on signup page * (also the screen readers will understand the 'required' html tag)
     - copyright footer
-    - admin user, and make admin page only work if authenticated and admin
     - change property description to be limited length so its ths same size cards
     - change logo from school to a cool logo
 

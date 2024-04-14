@@ -24,13 +24,8 @@ def index():
                                                               
 @login_manager.user_loader
 def load_user(user_id):
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    cursor.execute('SELECT * FROM users WHERE id = ?', (user_id,))
-    user_data = cursor.fetchone()
-    conn.close()
-    if user_data:
-        user = User(user_data['id'], user_data['first_name'], user_data['last_name'], user_data['email'], user_data['password'])
+    user = get_user_by_id(user_id)
+    if user:
         return user
     return None
 
@@ -93,11 +88,17 @@ def signup():
 @app.route('/admin')
 @login_required
 def admin():
+    if current_user.is_admin == False:
+        flash('You do not have permission to access this page', 'error')
+        return redirect(url_for('browse'))
     return render_template('admin.html')
 
 @app.route('/upload_schools', methods=['POST'])
 @login_required
 def upload_schools():
+    if current_user.is_admin == False:
+        flash('You do not have permission to access this page', 'error')
+        return redirect(url_for('browse'))
     if request.method == 'POST':
         # algorithm to for checking the csv data before loading it into the database
         if 'schools_csv_file' not in request.files: # check the file is provided
@@ -143,6 +144,9 @@ def upload_schools():
 @app.route('/upload_bus_stops', methods=['POST'])
 @login_required
 def upload_bus_stops():
+    if current_user.is_admin == False:
+        flash('You do not have permission to access this page', 'error')
+        return redirect(url_for('browse'))
     if request.method == 'POST':
         # algorithm to for checking the csv data before loading it into the database
         if 'bus_stops_csv_file' not in request.files: # check the file is provided
@@ -216,6 +220,35 @@ def search():
         return render_template('search.html', properties=properties, suburbs=suburbs, property_to_schools=property_to_schools, property_to_bus_stops=property_to_bus_stops, selected_suburb=suburb, selected_distance_school=target_distance_school, selected_distance_bus=target_distance_bus_stops)
     return render_template('search.html', suburbs=suburbs)
 
+@app.route('/profile', methods=['GET', 'POST'])
+@login_required
+def profile():
+    userform = None
+    
+    if request.method == 'GET':
+        user = get_user_by_id(current_user.id)
+        userform = UserForm(obj=user)
+        if user.businessname:
+            userform.is_in_realestate.data = True
+    else: 
+        userform = UserForm()
+        if userform.validate():
+            first_name = request.form['first_name']
+            last_name = request.form['last_name']
+            occupation = request.form['occupation']
+            email = request.form['email']
+            password = request.form['password']
+            businessname = request.form['businessname']
+            conn = get_db_connection()
+            cursor = conn.cursor()
+            cursor.execute('UPDATE users SET first_name = ?, last_name = ?, occupation = ?, email = ?, businessname = ?) VALUES (?, ?, ?, ?, ?)',
+                       (first_name, last_name, occupation, email, businessname))
+            conn.commit()
+            conn.close()
+            flash('Changes have been saved', 'info')
+        else:
+            flash('Invalid input', 'error')
+    return render_template('profile.html', form=userform)
 
 ################### Helper functions for the routes ####################
 
@@ -279,7 +312,15 @@ def get_user_by_email(email):
     conn.close()
     if user == None:
         return None
-    return User(user['id'], user['first_name'], user['last_name'], user['email'],  user['password'])
+    return User(user['id'], user['first_name'], user['last_name'], user['occupation'], user['email'], user['password'], user['businessname'], user['is_admin'])
+
+def get_user_by_id(id):
+    conn = get_db_connection()
+    user = conn.execute('SELECT * FROM users WHERE id = ?', (id,)).fetchone()
+    conn.close()
+    if user == None:
+        return None
+    return User(user['id'], user['first_name'], user['last_name'], user['occupation'], user['email'], user['password'], user['businessname'], user['is_admin'])
 
 def get_db_connection():
     conn = sqlite3.connect('QPC.db')
