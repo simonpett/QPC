@@ -7,10 +7,17 @@
 {% block content %}
 <h4>Administrative page to upload bus and school data from the government databases</h4>
 
-<form method="post" action="{{ url_for('upload_schools')}}"enctype="multipart/form-data">
+<form method="post" action="{{ url_for('upload_schools')}}" enctype="multipart/form-data">
     <label for="schools_csv_file">School update: Select CSV file to upload, it must match the QLD government site format <br> This will delete all existing entries and replace them with the entries from the uploaded file</label>
     <input type="file" class="form-control mt-2" name="schools_csv_file" accept=".csv">
     <button type="submit" class="btn btn-primary mt-3">Upload</button>
 </form>
+<br>
+<form method="post" action="{{ url_for('upload_bus_stops')}}" enctype="multipart/form-data">
+    <label for="bus_stops_csv_file">Bus Stop update: Select CSV file to upload, it must match the QLD government site format <br> This will delete all existing entries and replace them with the entries from the uploaded file</label>
+    <input type="file" class="form-control mt-2" name="bus_stops_csv_file" accept=".csv">
+    <button type="submit" class="btn btn-primary mt-3">Upload</button>
+</form>
+
 
 {% endblock %}

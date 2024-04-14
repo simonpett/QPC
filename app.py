@@ -129,14 +129,58 @@ def upload_schools():
             suburb = row['Actual Address Line 3']
             latitude = row['Latitude']
             longitude = row['Longitude']
-            
-            # Insert the school into the database
             cursor.execute('INSERT INTO schools (id, name, suburb, latitude, longitude) VALUES (?, ?, ?, ?, ?)',
                             (id, name, suburb, latitude, longitude))
             schools += 1
         conn.commit()
         conn.close()       
         flash(str(schools)+' Schools uploaded successfully', 'info')
+        return redirect(url_for('admin'))
+    else:
+        return redirect(url_for('admin'))
+    
+    
+@app.route('/upload_bus_stops', methods=['POST'])
+@login_required
+def upload_bus_stops():
+    if request.method == 'POST':
+        # algorithm to for checking the csv data before loading it into the database
+        if 'bus_stops_csv_file' not in request.files: # check the file is provided
+            flash('No file provided', 'error')
+            return render_template('admin.html')
+        bus_stops_csv_file = request.files['bus_stops_csv_file'] 
+        if bus_stops_csv_file.filename == '':        
+            flash('No filename provided', 'error')
+            return render_template('admin.html')
+        
+        # open the file and read the data
+        filename = request.files['bus_stops_csv_file']
+        bus_stops_data = csv.DictReader(filename.stream.read().decode('utf-8-sig').splitlines())
+        
+        # Check if the file is has the required header fields 
+        header = bus_stops_data.fieldnames
+        if header[0] != "_id" or header[2] != 'HASTUS' or header[3] != 'DESCRIPTION' or header[10] != 'SUBURB' or header[8] != 'LATITUDE' or header[9] != 'LONGITUDE': 
+            flash("The file headers do not contain the required school fields", 'error') 
+            return render_template('admin.html')
+
+        # Iterate over the rows and insert schools into the database
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute('DELETE FROM bus_stops')
+        bus_stops = 0
+        for row in bus_stops_data:
+            id = row['_id']
+            bus_stop_number = row['HASTUS']
+            name = row['DESCRIPTION']
+            suburb = row['SUBURB']
+            latitude = row['LATITUDE']
+            longitude = row['LONGITUDE']
+            cursor.execute('INSERT INTO bus_stops (id, bus_stop_number, name, suburb, latitude, longitude) VALUES (?, ?, ?, ?, ?, ?)',
+                            (id, bus_stop_number, name, suburb, latitude, longitude))
+            bus_stops += 1
+        conn.commit()
+        conn.close()       
+        flash(str(bus_stops)+' Bus Stops uploaded successfully', 'info')
         return redirect(url_for('admin'))
     else:
         return redirect(url_for('admin'))
