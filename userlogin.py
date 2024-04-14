@@ -12,9 +12,9 @@ class User(UserMixin):
         self.businessname = businessname
         self.is_admin = is_admin
        
-   
     def set_password(self, password):
         self.password = generate_password_hash(password)
-
+        
+    # Check if the password argued is the same as the password in this User
     def check_password(self, password):
         return check_password_hash(self.password, password)

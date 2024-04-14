@@ -10,7 +10,7 @@ class UserForm(Form):
     is_in_realestate = BooleanField('I work in Real-Estate')
     businessname = StringField('Business Name', [validators.Length(min=4, max=25), validators.Optional()], render_kw={"placeholder": "Business Name"})
     
-    #fancy validators that we write ourselves
+    #custom validators for managing the password matching and optional business name
     def validate(self):
         if not super().validate():
            return False

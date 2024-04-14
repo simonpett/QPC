@@ -10,11 +10,10 @@ with open('data/schoolinfo.csv', 'r') as file:
     conn = sqlite3.connect('QPC.db')
     cursor = conn.cursor()
 
-    # Create a table in the database
+    # drop old table if exists and create new table in the database
     cursor.execute('DROP TABLE IF EXISTS schools')
     cursor.execute('CREATE TABLE schools (id INTEGER PRIMARY KEY, name TEXT, suburb TEXT, latitude INTEGER, longitude INTEGER)')
-
-    next(csv_reader)
+    next(csv_reader) # skip the header row
 
     # Iterate over each row in the CSV file
     for row in csv_reader:

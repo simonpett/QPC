@@ -50,9 +50,7 @@ properties = [
     (12, '79 Wattle St', '', 'Hamilton', '4007', 'QLD', 'DALLE2024-02-2420.51.19-11.webp', -27.4364, 153.0710, 'A charming small house, this quaint property offers a unique opportunity for refurbishment, with a simple layout and a somewhat neglected garden ready for inspiration.' , 1600000, 'House', 71, 6, 5, 4, 800, 1200, 5, 1, 1, 1),
     # wire owl coffee lat long for testing
     (13, '89 Bamboo St', '', 'Sandgate', '4017', 'QLD', 'DALLE2024-02-2520.44.22-13.webp', -27.3234, 153.0775, 'A charming Queenslander cottage shack. This quaint cottage embodies the essence of traditional Queensland architecture. First time on the market in 60 years.' , 1100000, 'House', 82, 3, 1, 1, 250, 500, 2, 0, 0, 0)
-
 ]
-
 
 cursor.executemany('''
     INSERT INTO properties (

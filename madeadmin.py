@@ -4,7 +4,7 @@ conn = sqlite3.connect('QPC.db')
 # Create a cursor object to interact with the database
 cursor = conn.cursor()
 
-# Update the users table
+# Update the users table to make johnsmith and admin
 query = "UPDATE users SET is_admin = TRUE WHERE email = 'johnsmith@gmail.com'"
 
 # Execute the query
