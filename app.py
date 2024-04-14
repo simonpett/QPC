@@ -160,10 +160,10 @@ def upload_bus_stops():
         # Check if the file is has the required header fields 
         header = bus_stops_data.fieldnames
         if header[0] != "_id" or header[2] != 'HASTUS' or header[3] != 'DESCRIPTION' or header[10] != 'SUBURB' or header[8] != 'LATITUDE' or header[9] != 'LONGITUDE': 
-            flash("The file headers do not contain the required school fields", 'error') 
+            flash("The file headers do not contain the required bus stop fields", 'error') 
             return render_template('admin.html')
 
-        # Iterate over the rows and insert schools into the database
+        # Iterate over the rows and insert bus stops into the database
         conn = get_db_connection()
         cursor = conn.cursor()
         cursor.execute('DELETE FROM bus_stops')
