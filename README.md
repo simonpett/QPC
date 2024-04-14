@@ -30,33 +30,35 @@ Questions
 
 Done
 - import csv to the database for the busstop and the schools
-- create test properties and populate the database propoerty table
+- create test houses and properties and populate the database propoerty table
 - implement browse property functionality, a browse page that loads all propoerties from the database and displays them in a boostrap grid system using bootstrap cards 
-- implement signup functionality, signup page with browser and server validation and stores new user in user table in database, hashes the pwd so it cant be read in db 
-- implement login page, check email, pwd v database version, stores user in session 
+- implement login page, check email, pwd v database version, stores user in session, create test user script
 - implement logout, accessed from menu
-- check user is logged in 
-- validate email is unique on signup
-- search page based on suburb, school, busroute
-- create 'please login message' after signup
-- upload page for cvs - use code form the import scripts
- - admin user, and make admin page only work if authenticated and admin
- - create a edit profile page that works of signup userForm
+- check user is logged in on routes and nav
+- implement signup functionality, signup page with browser and server validation and stores new user in user table in database, hashes the pwd so it cant be read in db 
+- validate email is unique on signup, use form validators for every field
+- search page based on suburb, school, busroute - using distance for schools/busstops form property, use hover css to make data viewable
+- implement consistent flash messaging for info and error - eg create 'please login message' after signup
+- upload page for cvs - use code form the import scripts, validate correct headers and filename
+- admin user, and make admin page and routes only work if authenticated and admin
+- create a edit profile page that works of signup userForm and validates against pwd for security
+- data and definition of terms, including copyright ack from list of open source libraris as above, and images from chatgpt
+- simple forgot pwd page, with route that just dummy sends email
+- change property description to be limited length so its ths same size cards
+- change logo from school to a cool logo
+- copyright footer
+
+
 
 TO DOs
-- Pages
-    - data and definition of terms, including copyright ack from list of open source libraris as above, and images from chatgpt
-    - simple forgot pwd page, with route that just dummy sends email
-- Updates
-    - review pages for useability
-        - titles on every page
-        - headings on every page
-        - images alt text, except decoration images - done, just review at end
-        - test non-mouse tabbing - works now but test at the end
-        - add required fields on signup page * (also the screen readers will understand the 'required' html tag)
-    - copyright footer
-    - change property description to be limited length so its ths same size cards
-    - change logo from school to a cool logo
+- Pages - DONE
+- Usablity review
+    - titles on every page - every page has a title for browser using the title block - DONE
+    - headings on every page - every page has a H4 title - DONE
+    - images alt text, except decoration images - DONE
+    - test non-mouse tabbing - works now but test at the end
+    - add required fields on signup page * (also the screen readers will understand the 'required' html tag)
+
 
 
 
@@ -126,3 +128,4 @@ intall extra extensions
 - sqlite - simplest db view - many other choices
 - csv rainbow - for csv colour highlighting
 - live share - for in vscode live sharing
+- vs code pets :)

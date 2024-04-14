@@ -5,4 +5,3 @@ flask-wtf
 wtforms
 email_validator
 markupsafe
-csv

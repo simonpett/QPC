@@ -193,7 +193,7 @@ def upload_bus_stops():
 @login_required                                                           
 def browse():  
     conn = get_db_connection()                                                  
-    properties = conn.execute('SELECT * FROM properties').fetchall()                
+    properties = conn.execute('SELECT * FROM properties ORDER BY suburb').fetchall()                
     conn.close()                       
     return render_template('browse.html', properties=properties)    
 

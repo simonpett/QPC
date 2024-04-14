@@ -25,7 +25,7 @@
         <nav class="navbar">
             
             <a href="{{ url_for('index') }}">
-              <img class="logo" src="{{ url_for('static', filename='images/cclogo.jpg') }}" alt="logo" width="90px" height="90px">
+              <img class="logo" src="{{ url_for('static', filename='images/logo1.webp') }}" alt="logo" width="90px" height="90px">
             </a>
             <h1 class="heading">Queensland Property Comparison</h1></a>
             <ul class="nav">
@@ -74,6 +74,19 @@
             {% endblock %}
           </div>
         </div
+
+        {% block footer %}
+
+          <footer class="text-center mt-5">
+            <div class="row justify-content-center mt-5">
+                <div class="col-1 mt-5">
+                    <br>
+                    <p><small>QPC &copy; 2024</small></p>  
+                </div>
+            </div>
+          </footer>
+
+        {% endblock %}
       </main>
       <!-- Bootstrap JavaScript Bundle with Popper -->
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
