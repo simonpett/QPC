@@ -39,11 +39,10 @@ Done
 - validate email is unique on signup
 - search page based on suburb, school, busroute
 - create 'please login message' after signup
-
+- upload page for cvs - use code form the import scripts
 
 TO DOs
 - Pages
-    - upload page for cvs - use code form the import scripts
     - create a edit profile page that works of signup userForm
     - data and definition of terms, including copyright ack from list of open source libraris as above, and images from chatgpt
     - simple forgot pwd page, with route that just dummy sends email
@@ -90,12 +89,12 @@ Notes for demo
 
 
 options to extend
-- use WTform on the signup 
 - connect to the gov api instead of download a csv
 - use a map for visualizing property, school and bus location - could use arcgis from gov api
 - use a database that has native map support like postgress (postgis) that will speed up distance and mapping quieries
 - support google and other major sso instead of creating users and storing pwd
-- create an admin page to convert user to an admin user, and submission of properties
+- create an admin page, than an existing admin can convert normal user to an admin user
+- extend admin page to allow updated and submission of properties
 - or even better if there are more user types, seperate user and role and use authentication for sign on of a user
      and authorization system for role of the user (admin, realestate user, public user)
 - implement forgot pwd/reset pwd fucntionality using flask-login extensions, also rememberme functionality 
