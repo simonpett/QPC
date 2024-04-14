@@ -231,21 +231,24 @@ def profile():
         if user.businessname:
             userform.is_in_realestate.data = True
     else: 
-        userform = UserForm()
+        userform = UserForm(request.form)
         if userform.validate():
-            first_name = request.form['first_name']
-            last_name = request.form['last_name']
-            occupation = request.form['occupation']
-            email = request.form['email']
-            password = request.form['password']
-            businessname = request.form['businessname']
-            conn = get_db_connection()
-            cursor = conn.cursor()
-            cursor.execute('UPDATE users SET first_name = ?, last_name = ?, occupation = ?, email = ?, businessname = ?) VALUES (?, ?, ?, ?, ?)',
-                       (first_name, last_name, occupation, email, businessname))
-            conn.commit()
-            conn.close()
-            flash('Changes have been saved', 'info')
+            userfromDB = get_user_by_id(current_user.id)
+            if userfromDB.check_password(request.form['password']):
+                first_name = request.form['first_name']
+                last_name = request.form['last_name']
+                occupation = request.form['occupation']
+                email = request.form['email']
+                businessname = request.form['businessname']
+                conn = get_db_connection()
+                cursor = conn.cursor()
+                cursor.execute('UPDATE users SET first_name = ?, last_name = ?, occupation = ?, email = ?, businessname = ? WHERE id = ?',
+                        (first_name, last_name, occupation, email, businessname, current_user.id))
+                conn.commit()
+                conn.close()
+                flash('Changes have been saved', 'info')
+            else:
+                flash('Invalid password', 'error')
         else:
             flash('Invalid input', 'error')
     return render_template('profile.html', form=userform)
