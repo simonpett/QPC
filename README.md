@@ -88,15 +88,14 @@ Notes for demo
     - could use a plugin for testing accessibility
 
 
-options to extend
-- connect to the gov api instead of download a csv
+extensions
+- be able to search on all the other data, ie lke a park for brad persona, and crime statistics in area, place all on a map
+- connect to the gov api instead of download a csv to get faster updates if bus stop changes for example
 - use a map for visualizing property, school and bus location - could use arcgis from gov api
 - use a database that has native map support like postgress (postgis) that will speed up distance and mapping quieries
-- support google and other major sso instead of creating users and storing pwd
-- create an admin page, than an existing admin can convert normal user to an admin user
-- extend admin page to allow updated and submission of properties
-- or even better if there are more user types, seperate user and role and use authentication for sign on of a user
-     and authorization system for role of the user (admin, realestate user, public user)
+- support google and other major sso instead of creating users and storing pwd to increase security via two factor authenticaion
+- create an admin page, than an existing admin can convert normal user to an admin user to reduce time to make admin
+- extend admin page to allow updated and submission of properties so office team can do updates instead of IT
 - implement forgot pwd/reset pwd fucntionality using flask-login extensions, also rememberme functionality 
 
 
