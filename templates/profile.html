@@ -9,47 +9,46 @@
     <div class="row">
        <div class="col-md-4 mx-auto">
             <h4>Update Your Profile</h4>
-            
             <form method="POST" action="{{ url_for('profile') }}">
-                <div class="form-group mb-3">{{ form.first_name.label }}: {{ form.first_name(class_="form-control") }}</div>
+                <div class="form-group mb-3">{{ form.first_name.label }}:{% if form.first_name.flags.required %}<span style="color: red;">*</span>{% endif %}
+                    {{ form.first_name(class_="form-control") }}</div>
                 {% if form.first_name.errors %}
                     <ul class="alert alert-warning list-unstyled mt-1">{% for error in form.first_name.errors %}<li>{{ error }}</li>{% endfor %}</ul>
                 {% endif %}
-
-                <div class="form-group mb-3">{{ form.last_name.label }}: {{ form.last_name(class_="form-control")}}</div>
+                <div class="form-group mb-3">{{ form.last_name.label }}:{% if form.last_name.flags.required %}<span style="color: red;">*</span>{% endif %} 
+                    {{ form.last_name(class_="form-control")}}</div>
                 {% if form.last_name.errors %}
                     <ul class="alert alert-warning list-unstyled mt-1">{% for error in form.last_name.errors %}<li>{{ error }}</li>{% endfor %}</ul>
                 {% endif %}
-                <div class="form-group mb-3">{{ form.occupation.label }}: {{ form.occupation(class_="form-control") }}</div>
+                <div class="form-group mb-3">{{ form.occupation.label }}:{% if form.occupation.flags.required %}<span style="color: red;">*</span>{% endif %}
+                    {{ form.occupation(class_="form-control") }}</div>
                 {% if form.occupation.errors %}
                     <ul class="alert alert-warning list-unstyled mt-1">{% for error in form.occupation.errors %}<li>{{ error }}</li>{% endfor %}</ul>
                 {% endif %}
-                <div class="form-group mb-3">{{ form.email.label }}: {{ form.email(class_="form-control") }}</div>
+                <div class="form-group mb-3">{{ form.email.label }}:{% if form.email.flags.required %}<span style="color: red;">*</span>{% endif %}
+                    {{ form.email(class_="form-control") }}</div>
                 {% if form.email.errors %}
                     <ul class="alert alert-warning list-unstyled mt-1">{% for error in form.email.errors %}<li>{{ error }}</li>{% endfor %}</ul>
                 {% endif %}
-                <div class="form-group mb-3">{{ form.is_in_realestate.label }}: {{ form.is_in_realestate }}</div>
+                <div class="form-group mb-3">{{ form.is_in_realestate.label }}:{{ form.is_in_realestate }}</div>
                 <div class="form-group mb-3" id="businessnamecontainer" style="display: {% if form.is_in_realestate.data == True %}block{% else %}none{% endif %}" >{{ form.businessname.label }}: {{ form.businessname(class_="form-control") }}</div>
                 {% if form.businessname.errors %}
                     <ul class="alert alert-warning list-unstyled mt-1">{% for error in form.businessname.errors %}<li>{{ error }}</li>{% endfor %}</ul>
                 {% endif %}
-
-                <p>Enter Your Password to Save Changes</p>
-                <p>To change password, use password reset <a href="{{ url_for('forgotpassword') }}" class="btn btn-link">Forgot Password?</a></p> 
-
-                <div class="form-group mb-3">{{ form.password.label }}: {{ form.password(class_="form-control") }}</div>
+                <p>Enter Your Password to Save Changes<br>
+                To change password, please use: <a href="{{ url_for('forgotpassword') }}" class="btn btn-link">Forgot Password?</a></p> 
+                <div class="form-group mb-3">{{ form.password.label }}:{% if form.password.flags.required %}<span style="color: red;">*</span>{% endif %}
+                    {{ form.password(class_="form-control") }}</div>
                 {% if form.password.errors %}
                     <ul class="alert alert-warning list-unstyled mt-1">{% for error in form.password.errors %}<li>{{ error }}</li>{% endfor %}</ul>
                 {% endif %}
-                <div class="form-group mb-3" >{{ form.verify_password.label }}: {{ form.verify_password(class_="form-control") }}</div>
+                <div class="form-group mb-3" >{{ form.verify_password.label }}:{% if form.verify_password.flags.required %}<span style="color: red;">*</span>{% endif %}
+                    {{ form.verify_password(class_="form-control") }}</div>
                 {% if form.verify_password.errors %}
                     <ul class="alert alert-warning list-unstyled mt-1">{% for error in form.verify_password.errors %}<li>{{ error }}</li>{% endfor %}</ul>
                 {% endif %}
-                
-        
-               
-
                 <button type="submit" class="btn btn-primary">Save</button>
+                <p><span style="color: red;">*</span> Required feild</p>
             </form>
         </div>
     </div>

@@ -47,17 +47,20 @@ Done
 - change property description to be limited length so its ths same size cards
 - change logo from school to a cool logo
 - copyright footer
+- usablity review:
+    - titles on every page - every page has a title for browser using the title block - DONE
+    - headings on every page - every page has a H4 title - DONE
+    - images alt text, except decoration images - DONE
+    - test non-mouse tabbing - DONE
+    - add required fields on signup page * (also the screen readers will understand the 'required' html tag 
+        that is used by required validator - but * helps too) -  DONE
+- upload to cloud - https://qpc-2024.azurewebsites.net/
+- delete white lines to make it easier to screen shot for final report
 
 
 
 TO DOs
-- Pages - DONE
-- Usablity review
-    - titles on every page - every page has a title for browser using the title block - DONE
-    - headings on every page - every page has a H4 title - DONE
-    - images alt text, except decoration images - DONE
-    - test non-mouse tabbing - works now but test at the end
-    - add required fields on signup page * (also the screen readers will understand the 'required' html tag)
+- see extensions
 
 
 
@@ -99,7 +102,9 @@ extensions
 - create an admin page, than an existing admin can convert normal user to an admin user to reduce time to make admin
 - extend admin page to allow updated and submission of properties so office team can do updates instead of IT
 - implement forgot pwd/reset pwd fucntionality using flask-login extensions, also rememberme functionality 
-
+- reduce duplicate code in signup and profile to make it more readable and supportable
+- divide up app.py into smaller files to make it easier to support
+- create automated tests to make change faster by reducing testing time
 
 
 setup instructions
