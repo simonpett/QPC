@@ -13,8 +13,7 @@ app = Flask(__name__)                           # create a Flask app
 app.secret_key = 'aodhfbdfhvbw8357y8735bjehlf'  # set the secret key for the app to sign the session cookie
 login_manager = LoginManager()                  # create a LoginManager object to manage session authentication
 login_manager.init_app(app)                     # initialise the LoginManager object with the app
-login_manager.login_view = 'login'              # link the login route the login manager users when finds unauthenticated user
-
+login_manager.login_view = 'login'              # use login route when manage finds unauthenticated user
 if __name__ == '__main__':                      # run the app
     app.run()
     
@@ -53,17 +52,18 @@ def signup():
         form = UserForm(request.form)
     else:
         form = UserForm()                       # create a new UserForm object
-    # algorithm to validate the user data and check if the users already exists using UserForm validators
-    if request.method == 'POST' and form.validate():
+    if request.method == 'POST' and form.validate(): # algorithm to validate data and create errors if invalid
         user = get_user_by_email(form.email.data) # check if user already exists
         if user != None:                          # if user exists, send error message
-            flash(Markup('User already exists, please use a different email, or try forgotten password <a href="'+url_for('forgotpassword')+'" class="alert-link">here</a>'), 'error')
+            flash(Markup('''User already exists, please use a different email, or try forgotten password 
+                         <a href="'+url_for('forgotpassword')+'" class="alert-link">here</a>'''), 'error')
             return render_template('signUp.html', form=form)
-        password = request.form['password'] # get password to hash
+        hashedPassword = generate_password_hash(request.form['password']) # get password and hash
         conn = get_db_connection()              # connect to the database
-        cursor = conn.cursor()                  # create a cursor object and insert the validated data into hte database as a new user
-        cursor.execute('INSERT INTO users (first_name, last_name, occupation, email, password, businessname) VALUES (?, ?, ?, ?, ?, ?)',
-                       (request.form['first_name'], request.form['last_name'], request.form['occupation'], request.form['email'], generate_password_hash(password), request.form['businessname']))
+        cursor = conn.cursor()                  # next, insert the validated data into hte database as a new user
+        cursor.execute('''INSERT INTO users (first_name, last_name, occupation, email, password, businessname)
+            VALUES (?, ?, ?, ?, ?, ?)''', (request.form['first_name'], request.form['last_name'], 
+            request.form['occupation'],request.form['email'], hashedPassword, request.form['businessname']))
         conn.commit()                           # commit the changes and close the database connection
         conn.close()                            # close the database connection and send a welcome message
         flash('Thanks for signing up! Please login to continue', 'info') 
