@@ -64,7 +64,7 @@ def signup():
     if request.method == 'POST' and form.validate():
         user = get_user_by_email(form.email.data) # check if user already exists
         if user != None:
-            flash(Markup('User already exists, please use a different email, or try forgotten password <a href="'+url_for('forgotPassword')+'" class="alert-link">here</a>'), 'error')
+            flash(Markup('User already exists, please use a different email, or try forgotten password <a href="'+url_for('forgotpassword')+'" class="alert-link">here</a>'), 'error')
             return render_template('signUp.html', form=form)
         # validate - so now handle the new signup form submission
         first_name = request.form['first_name']
