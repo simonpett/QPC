@@ -1,6 +1,6 @@
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
-# create a user class that inherits from UserMixin to support the flask login LoginManager do session authentication
+# user class that inherits UserMixin so the flask login LoginManager can do session authentication
 class User(UserMixin):
     def __init__(self, id, firstname, lastname, occupation, email, password, businessname, is_admin):
         self.id = id
@@ -11,8 +11,8 @@ class User(UserMixin):
         self.password = password
         self.businessname = businessname
         self.is_admin = is_admin
-    def set_password(self, password):
+    def set_password(self, password):   # method to set password, hash the password before storing
         self.password = generate_password_hash(password)
-    def check_password(self, password):
+    def check_password(self, password): # compare the arg password with the hashed password
         return check_password_hash(self.password, password)
     
