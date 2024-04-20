@@ -96,7 +96,8 @@ def upload_schools():
         filename = request.files['schools_csv_file'] # if filename provided, open the file and read the data
         schools_data = csv.DictReader(filename.stream.read().decode('utf-8-sig').splitlines())
         header = schools_data.fieldnames        # check if the file is has the required header fields
-        if header[0] != "_id" or header[2] != 'Centre Name' or header[18] != 'Actual Address Line 3' or header[38] != 'Latitude' or header[37] != 'Longitude': 
+        if (header[0] != "_id" or header[2] != 'Centre Name' or header[18] != 'Actual Address Line 3' or 
+                    header[38] != 'Latitude' or header[37] != 'Longitude'): 
             flash("The file headers do not contain the required school fields", 'error') 
             return render_template('admin.html')
         conn = get_db_connection()              # file exists and in correct format to update the database
@@ -105,13 +106,12 @@ def upload_schools():
         schools = 0                             # count the number of schools uploaded
         for row in schools_data:                # iterate over the rows and insert schools into the database
             cursor.execute('INSERT INTO schools (id, name, suburb, latitude, longitude) VALUES (?, ?, ?, ?, ?)',
-                            (row['_id'], row['Centre Name'], row['Actual Address Line 3'], row['Latitude'], row['Longitude']))
+                (row['_id'], row['Centre Name'], row['Actual Address Line 3'], row['Latitude'], row['Longitude']))
             schools += 1                        # increment the schools count in the loop
-        conn.commit()                           # commit the changes which deletes the old and inserts the new data
-        conn.close()                            # close the database connection and send a success message
+        conn.commit()                           # commit deletes the old and inserts the new data
+        conn.close()                            # close db conn and send a success message
         flash(str(schools)+' Schools uploaded successfully', 'info')
     return redirect(url_for('admin'))
-    
     
 @app.route('/upload_bus_stops', methods=['POST'])   # route to upload the bus stops data csv file
 @login_required                                     # login required to access this route, else auto error
@@ -130,7 +130,8 @@ def upload_bus_stops():
         filename = request.files['bus_stops_csv_file']  # if filename provided, open the file and read the data
         bus_stops_data = csv.DictReader(filename.stream.read().decode('utf-8-sig').splitlines())
         header = bus_stops_data.fieldnames          # check if the file is has the required header fields
-        if header[0] != "_id" or header[2] != 'HASTUS' or header[3] != 'DESCRIPTION' or header[10] != 'SUBURB' or header[8] != 'LATITUDE' or header[9] != 'LONGITUDE': 
+        if (header[0] != "_id" or header[2] != 'HASTUS' or header[3] != 'DESCRIPTION' or 
+            header[10] != 'SUBURB' or header[8] != 'LATITUDE' or header[9] != 'LONGITUDE'): 
             flash("The file headers do not contain the required bus stop fields", 'error') 
             return render_template('admin.html')
         conn = get_db_connection()                  # file exists and in correct format to update the database
@@ -165,16 +166,17 @@ def search():
         property_to_bus_stops = {}
         target_distance_school = int(request.form['school_distance']) # get the target distances from form
         target_distance_bus_stops = float(request.form['bus_stop_distance'])
-        for property in properties:             # iterate over the properties and get the schools and bus stops within the target distance
+        for property in properties:             # iterate over the props
             property_lat = property['lat']      # get the latitude and longitude of the property
-            property_long = property['long']    # next get the schools and bus stops within the target distance and assign to the dict
+            property_long = property['long']    # next get schools and bus stops within target distance, assign to the dict
             schools_within_distance = get_schools_within_distance(target_distance_school, property_lat, property_long)
             property_to_schools[property['id']] = schools_within_distance
             bus_stops_within_distance = get_bus_stops_within_distance(target_distance_bus_stops, property_lat, property_long)
             property_to_bus_stops[property['id']] = bus_stops_within_distance
         # send the found properties, the associated schools and bus stops, and the search criteria, selected suburb, distances to form
-        return render_template('search.html', properties=properties, suburbs=suburbs, property_to_schools=property_to_schools, property_to_bus_stops=property_to_bus_stops, 
-                               selected_suburb=suburb, selected_distance_school=target_distance_school, selected_distance_bus=target_distance_bus_stops)
+        return render_template('search.html', properties=properties, suburbs=suburbs, property_to_schools=property_to_schools, 
+            property_to_bus_stops=property_to_bus_stops, selected_suburb=suburb, selected_distance_school=target_distance_school,
+            selected_distance_bus=target_distance_bus_stops)
     return render_template('search.html', suburbs=suburbs)  # if get request, render the search page with unique suburbs
 
 @app.route('/profile', methods=['GET', 'POST']) # route to the user profile page so users can update their details
@@ -194,14 +196,15 @@ def profile():
                 conn = get_db_connection()      # everything is valid, connect to the database and update the user details
                 cursor = conn.cursor()          # create a cursor object and update the user details in the database
                 cursor.execute('UPDATE users SET first_name = ?, last_name = ?, occupation = ?, email = ?, businessname = ? WHERE id = ?',
-                        (request.form['first_name'], request.form['last_name'], request.form['occupation'], request.form['email'], request.form['businessname'], current_user.id))
+                        (request.form['first_name'], request.form['last_name'], request.form['occupation'], request.form['email'], 
+                         request.form['businessname'], current_user.id))
                 conn.commit()                   # commit the changes and close the database connection
                 conn.close()                    # close the database connection and send a success message
                 flash('Changes have been saved', 'info') # send a success message
             else:
                 flash('Invalid password', 'error') # if password is incorrect, send an error message
         else:        
-            flash('Invalid input', 'error')     # if the form is invalid, send an error message, (userForm will auto include the field errors)
+            flash('Invalid input', 'error')     # if form is invalid, send error msg, (userForm will auto include field errors)
     return render_template('profile.html', form=userform) # if get render the profile page with the UserForm
 
 @app.route('/datapolicy') # route to the data policy page
