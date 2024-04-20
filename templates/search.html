@@ -9,7 +9,8 @@
             <label for="suburb">Suburb:</label>
             <select name="suburb" id="suburb" class="form-control">
                 {% for suburb in suburbs %}
-                    <option value="{{ suburb[0] }}" {% if selected_suburb == suburb[0] %}selected{% endif %}>{{ suburb[0] }}</option>
+                    <option value="{{ suburb[0] }}" {% if selected_suburb == suburb[0] %}selected{% endif %}>
+                        {{ suburb[0] }}</option>
                 {% endfor %}
             </select>
         </div>
@@ -56,7 +57,8 @@
                         </p>
                         <div class="hover_content">
                             <p><i class="fa-solid fa-school"> </i> 
-                                Hover to see the {{ property_to_schools[property.id] | length }} schools within {{ selected_distance_school }} km
+                                Hover to see the {{ property_to_schools[property.id] | length }} schools 
+                                    within {{ selected_distance_school }} km
                             </p>
                             <div class="hover_list" style="display:none">
                                 {% set schools_for_property = property_to_schools[property.id]%}
@@ -72,7 +74,8 @@
                         </div>
                         <div class="hover_content">
                             <p><i class="fa-solid fa-bus"> </i> 
-                                Hover to see the {{ property_to_bus_stops[property.id] | length }} bus stops within {{ selected_distance_bus }} km
+                                Hover to see the {{ property_to_bus_stops[property.id] | length }} bus stops 
+                                    within {{ selected_distance_bus }} km
                             </p>
                             <div class="hover_list" style="display:none">
                                 {% set bus_stops_for_property = property_to_bus_stops[property.id]%}
