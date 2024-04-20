@@ -1,5 +1,5 @@
 from wtforms import Form, BooleanField, StringField, validators, EmailField, PasswordField
-
+# create a wtform that validates the data sent from the browser signup and profile pages
 class UserForm(Form):
     first_name     = StringField('First Name', [validators.Length(min=4, max=25), validators.DataRequired()], render_kw={"placeholder": "First Name"})
     last_name     = StringField('Last Name', [validators.Length(min=4, max=25), validators.DataRequired()], render_kw={"placeholder": "Last Name"})
