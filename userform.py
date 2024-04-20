@@ -10,19 +10,15 @@ class UserForm(Form):
     is_in_realestate = BooleanField('I work in Real-Estate')
     businessname = StringField('Business Name', [validators.Length(min=4, max=25), validators.Optional()], render_kw={"placeholder": "Business Name"})
     
-    #custom validators for managing the password matching and optional business name
     def validate(self):
         if not super().validate():
            return False
-
         if self.password.data != self.verify_password.data:
             self.verify_password.errors.append('Passwords do not match')
             return False
-
         if self.is_in_realestate.data and not self.businessname.data:
             self.businessname.errors.append('Business name is required for users in real estate')
             return False
-
         return True
     
    

@@ -1,12 +1,9 @@
 {% extends 'base.html' %}
-
 {% block title%}
     <title>QPC - Property Search</title>
 {% endblock%}
-
 {% block content %}
     <h4>Find homes in a suburb close to schools and bus stops</h4>
-
     <form method="POST">
         <div class="form-group">
             <label for="suburb">Suburb:</label>
@@ -40,7 +37,6 @@
         </div>
         <button type="submit" class="btn btn-primary mt-4 mb-4">Search</button>
     </form>
-
     <div class="row">
         {% for property in properties %}
             {% set imagepath = 'images/' ~ property.image %}

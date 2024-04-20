@@ -100,26 +100,19 @@ def upload_schools():
         flash('You do not have permission to access this page', 'error')
         return redirect(url_for('browse'))
     if request.method == 'POST':
-        # algorithm to for checking the csv data before loading it into the database
-        if 'schools_csv_file' not in request.files: # check the file is provided
+        if 'schools_csv_file' not in request.files: 
             flash('No file provided', 'error')
             return render_template('admin.html')
         schools_csv_file = request.files['schools_csv_file'] 
         if schools_csv_file.filename == '':        
             flash('No filename provided', 'error')
             return render_template('admin.html')
-        
-        # open the file and read the data
         filename = request.files['schools_csv_file']
         schools_data = csv.DictReader(filename.stream.read().decode('utf-8-sig').splitlines())
-        
-        # Check if the file is has the required header fields 
         header = schools_data.fieldnames
         if header[0] != "_id" or header[2] != 'Centre Name' or header[18] != 'Actual Address Line 3' or header[38] != 'Latitude' or header[37] != 'Longitude': 
             flash("The file headers do not contain the required school fields", 'error') 
             return render_template('admin.html')
-
-        # Iterate over the rows and insert schools into the database
         conn = get_db_connection()
         cursor = conn.cursor()
         cursor.execute('DELETE FROM schools')
@@ -257,7 +250,6 @@ def profile():
 def datapolicy():
     return render_template('datapolicy.html')
 
-#this is a mockup of a password reset to complete the site functionality
 @app.route('/forgotpassword', methods=['GET', 'POST'])
 def forgotpassword():
     if request.method == 'POST':
@@ -342,4 +334,5 @@ def get_db_connection():
     conn = sqlite3.connect('QPC.db')
     conn.row_factory = sqlite3.Row
     return conn
+
 
