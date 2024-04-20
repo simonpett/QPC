@@ -280,7 +280,8 @@ def get_user_by_email(email):
     conn.close()
     if user == None:
         return None
-    return User(user['id'], user['first_name'], user['last_name'], user['occupation'], user['email'], user['password'], user['businessname'], user['is_admin'])
+    return User(user['id'], user['first_name'], user['last_name'], user['occupation'], 
+            user['email'], user['password'], user['businessname'], user['is_admin'])
 
 def get_user_by_id(id):
     conn = get_db_connection()
@@ -288,7 +289,8 @@ def get_user_by_id(id):
     conn.close()
     if user == None:
         return None
-    return User(user['id'], user['first_name'], user['last_name'], user['occupation'], user['email'], user['password'], user['businessname'], user['is_admin'])
+    return User(user['id'], user['first_name'], user['last_name'], user['occupation'], 
+            user['email'], user['password'], user['businessname'], user['is_admin'])
 
 def get_db_connection():
     conn = sqlite3.connect('QPC.db')
