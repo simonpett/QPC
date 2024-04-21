@@ -114,23 +114,26 @@ Landing page -
 
 
 Demo signup
-- first lets look at the clients side code
+- user register personal details, record and validate user registration, incorrect user rego not stored in db
+- first lets look at the clients side code, in particular the accessibility and validation 
 - signup, has a  appropriate title in browser and heading at the right level. The style of showing placeholder text helps navigation. The required fields are indicated, and as per spec, the required fields not only have colout - but if press submit the browser side 'requried' flag in the input field will show the required fields
 - This and natural flow of tab order helps with intercation with voice input for accesibility (press tab to go around all the fields, maybe press the check box with space to show it works). 
 - All input feilds also have a label as per accessibility guidlines and if you click on the label the cursor goes to the input field making the selectable area larger (in spec)
 - Similarly the min max lengths are validated clients side, as is email format required, and password is hidden from view. 
 - If you hover over the input field when it is invalud (ie short input) it shows the validation rules.   
 
-- once I start gettign enough data the form will be submitted to the app.py signup route and servier validation will implement these rules again - as good security not to trust the browser validation - brwoser validation helps speed up entry but server side must validate all data.  
-- so to start testing - if I use spaces in name and occuptation, it will pass client browser validation, but will be picked up and show the server side validation in the wtform (userform.py), you can also see the rest of the data is not lost when the error is returned except the pwd as per normal pwd behavior, ie never store pwd in plain text even when accepting in a form
+- once I start gettign enough data the form will be submitted to the app.py signup route and servier validation will implement these rules again, and more custom rules. It is good security posture to not trust the browser validation - brwoser validation helps speed up entry but server side must validate all data.  
+- so to start testing - if I use spaces in name and occuptation, it will pass client browser validation, but will be picked up and show the server side validation from the wtform (userform.py). Its also worth noting the same wtform generates the html client side input field validation so they are kepy in sync automatically. 
+- you can also see the rest of the data is not lost when the error is returned except the pwd as per normal pwd behavior, ie never store pwd in plain text even when accepting in a form
 - if I use different matching passwords it will show custom server side validation in the wtform (userform.py)
 - if I click real-estate but dont enter data it will show custom server side validation in the wtform (userform.py)
 - lastly if you a use an email of an existing user, it will go the to custom validation in the signup route and suggest forgot password
-- now the validation is tested, a successful signup takes you back to the login as per common security pattern
+- now the validation is completed successfully, the successful signup takes you back to the login as per common security pattern
 --- at this stage you could show he userform.py by switching between browser and code if you want?
 
 Demo login
-- enter email and pwd, the clients side validation checks its an email, and length. Press enter with no data. 
+- user session variable to manage the user, ensure site operated by an authenitcated user
+- enter email and pwd, the clients side validation checks its an email, and length. (Press enter with no data to test). 
 - The server side will load the user for the email and check the pwd. Note the pwd is hashed when stored so it is not readable in the database. The user provided login pwd is hashed then checked against the db stored pwd value. Press enter with incorect password to get an error. The pwd is no resupplied which is correct, but the email could be so with TODO fix this or say, the inputs not returned - ran out of time / or say nothing as its minor. 
 - at this point could also so page for forgot password, whcih will then take you back to do the login again. 
 - completing the login, if found the Flask Login Manager loads the user into the session. Then on subsequent requests, say to update profile the @Login_Required decorator is used to ensure the current user in the session is logged in. 
